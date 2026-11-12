@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d1b">
+<title>ASS PRO Security Scanner</title>
+
+<style>
+:root {
+  color-scheme: dark;
+  --bg:#080d1b;
+  --panel:rgba(24,36,64,.57);
+  --panel2:rgba(35,51,83,.42);
+  --text:#edf5ff;
+  --muted:#91a1bd;
+  --accent:#42dfff;
+  --purple:#a28aff;
+  --border:rgba(174,205,255,.17);
+  --shadow:0 15px 45px rgba(0,0,0,.2);
+}
+body.light {
+  color-scheme:light;
+  --bg:#eaf0fa;
+  --panel:rgba(255,255,255,.59);
+  --panel2:rgba(255,255,255,.42);
+  --text:#15233d;
+  --muted:#63738e;
+  --accent:#087fae;
+  --purple:#7655ce;
+  --border:rgba(67,94,139,.17);
+  --shadow:0 15px 40px rgba(55,75,110,.1);
+}
+* {box-sizing:border-box}
+body {
+  margin:0;min-height:100vh;color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(ellipse at 85% 5%,rgba(66,120,255,.2),transparent 35%),
+    radial-gradient(ellipse at 5% 75%,rgba(0,205,255,.12),transparent 35%),
+    var(--bg);
+  transition:background .3s,color .3s;
+}
+button,input,textarea {font:inherit}
+button {cursor:pointer}
+.app {min-height:100vh}
+.sidebar {
+  position:sticky;top:0;z-index:10;
+  padding:18px 22px 13px;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(10px) saturate(170%);
+  -webkit-backdrop-filter:blur(10px) saturate(170%);
+}
+.brand {font-size:24px;font-weight:850;letter-spacing:-1px}
+.brand span {color:var(--accent)}
+.tagline {font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:2px}
+.menu {
+  display:flex;gap:8px;overflow-x:auto;
+  scrollbar-width:none;margin-top:18px;padding-bottom:2px;
+}
+.menu::-webkit-scrollbar {display:none}
+.menu button {
+  flex-shrink:0;border:1px solid transparent;
+  border-radius:15px;padding:12px 15px;
+  color:var(--muted);background:transparent;
+  transition:.25s;
+}
+.menu button.active,.menu button:hover {
+  color:var(--accent);
+  border-color:var(--border);
+  background:linear-gradient(120deg,rgba(66,223,255,.15),rgba(162,138,255,.14));
+  box-shadow:inset 0 1px rgba(255,255,255,.12),0 5px 20px rgba(0,0,0,.08);
+}
+.main {max-width:1200px;margin:auto;padding:27px 22px 60px}
+.top {display:flex;align-items:center;justify-content:space-between;gap:15px}
+h1 {font-size:27px;margin:0 0 5px;letter-spacing:-.7px}
+.subtitle {font-size:13px;color:var(--muted)}
+.glass {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:22px;
+  backdrop-filter:blur(10px) saturate(160%);
+  -webkit-backdrop-filter:blur(10px) saturate(160%);
+  box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.09);
+}
+.theme,.secondary,.action {
+  border:1px solid var(--border);
+  color:var(--text);background:var(--panel2);
+  border-radius:14px;padding:12px 16px;
+  transition:.25s;
+}
+.theme:hover,.secondary:hover,.action:hover {transform:translateY(-2px);border-color:var(--accent)}
+.hero {
+  margin-top:26px;padding:28px;position:relative;overflow:hidden;
+  background:linear-gradient(115deg,rgba(24,104,137,.55),rgba(85,57,145,.52));
+}
+.hero:after {
+  content:"";position:absolute;width:230px;height:230px;
+  border:1px solid rgba(104,222,255,.25);
+  border-radius:50%;right:-65px;top:-105px;
+  box-shadow:0 0 65px rgba(66,223,255,.15);
+}
+.status {color:#5ce6b2;font-weight:750;font-size:12px}
+.hero h2 {font-size:27px;margin:9px 0}
+.hero p {color:var(--muted);line-height:1.7;max-width:600px}
+.primary {
+  border:0;border-radius:15px;padding:15px 22px;
+  color:#061321;font-weight:800;
+  background:linear-gradient(110deg,#42dfff,#9b8cff);
+  box-shadow:0 8px 28px rgba(66,223,255,.2);
+  transition:.25s;
+}
+.primary:hover {transform:translateY(-3px);box-shadow:0 12px 35px rgba(66,223,255,.3)}
+.stats {display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.stat {padding:21px;min-height:125px}
+.symbol {font-size:22px;color:var(--accent)}
+.label {color:var(--muted);font-size:12px;margin-top:10px}
+.number {font-size:27px;font-weight:800;margin-top:8px}
+.section {margin-top:25px}
+.section h3 {font-size:17px}
+.activity,.content-card {padding:20px}
+.activity {line-height:2;color:var(--muted);font-size:13px}
+.page-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:20px}
+.content-card h3 {margin-top:0}
+.content-card p,.hint {color:var(--muted);font-size:13px;line-height:1.7}
+.field {
+  display:block;width:100%;padding:14px;margin:12px 0;
+  border:1px solid var(--border);border-radius:13px;
+  background:var(--panel2);color:var(--text);
+}
+input[type=file] {max-width:100%}
+.result {
+  padding:14px;border-radius:13px;margin-top:14px;
+  background:var(--panel2);border:1px solid var(--border);
+  overflow-wrap:anywhere;font-size:13px;line-height:1.8;
+}
+.good {color:#50dcae}.warning {color:#ffca70}.bad {color:#ff818e}
+.list-item {padding:13px 0;border-bottom:1px solid var(--border);font-size:13px}
+.footer {text-align:center;color:var(--muted);font-size:11px;margin-top:35px}
+.hidden {display:none!important}
+@media(max-width:800px) {
+  .stats {grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* ===== ASS PRO - LIQUID GLASS EFFECT ===== */
+
+.glass {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.22);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.13),
+      rgba(255,255,255,.025) 45%,
+      rgba(100,180,255,.07)
+    ),
+    var(--panel);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+ 
+   box-shadow:
+    0 12px 40px rgba(0,0,0,.16),
+    inset 0 1px 1px rgba(255,255,255,.25),
+    inset 0 -1px 1px rgba(255,255,255,.06);
+}
+
+/* Reflet lumineux sur le verre */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(
+    125deg,
+    rgba(255,255,255,.20),
+    transparent 28%,
+    transparent 70%,
+    rgba(90,190,255,.09)
+  );
+}
+
+/* Contenu au-dessus du reflet */
+.glass > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Boutons effet verre */
+.theme,
+.secondary,
+.action,
+.menu button {
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  transition:
+    transform .25s ease,
+    background .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease;
+}
+
+/* Effet lumineux au survol */
+.primary:hover,
+.theme:hover,
+.secondary:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 30px rgba(66,223,255,.23),
+    inset 0 1px rgba(255,255,255,.35);
+}
+
+/* Animation légère des pages */
+#page {
+  animation: glassAppear .22s ease-out both;
+}
+
+@keyframes glassAppear {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reflet du bouton principal */
+.primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.primary::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -80%;
+  width: 45%;
+  height: 200%;
+  transform: rotate(25deg);
+  background: rgba(255,255,255,.25);
+  transition: left .4s ease;
+}
+
+.primary:hover::after {
+  left: 140%;
+}
+
+/* Réduction des animations si demandée par le système */
+@media(prefers-reduced-motion:reduce) {
+  #page {
+    animation: none;
+  }
+  .primary::after {
+    transition: none;
+  }
+}
+
+@media(max-width:550px) {
+  .sidebar {padding:14px 13px 10px}
+  .main {padding:22px 14px 45px}
+  h1 {font-size:23px}
+  .hero {padding:21px}
+  .hero h2 {font-size:23px}
+  .page-grid {grid-template-columns:1fr}
+  .theme {padding:10px;font-size:12px}
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*:before,*:after {transition:none!important;animation:none!important}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">ASS <span>PRO</span></div>
+  <div class="tagline">SECURITY SCANNER</div>
+  <nav class="menu" id="menu">
+    <button class="active" data-page="dashboard">◈ Accueil</button>
+    <button data-page="files">▤ Fichiers</button>
+    <button data-page="links">↗ Liens</button>
+    <button data-page="apk">▣ APK</button>
+    <button data-page="integrity">⌕ Intégrité</button>
+    <button data-page="quarantine">⬡ Quarantaine</button>
+    <button data-page="reports">▧ Rapports</button>
+    <button data-page="settings">⚙ Paramètres</button>
+  </nav>
+</aside>
+
+<main class="main">
+  <div class="top">
+    <div>
+      <h1 id="pageTitle">Tableau de bord</h1>
+      <div class="subtitle">Centre de sécurité intelligent ASS PRO</div>
+    </div>
+    <button class="theme" id="themeButton">☼ Thème</button>
+  </div>
+
+  <div id="page"></div>
+  <div class="footer">ASS PRO SECURITY SCANNER · Version 0.2 · Prototype local</div>
+</main>
+</div>
+
+<script>
+const page = document.getElementById("page");
+const titles = {
+ dashboard:"Tableau de bord",files:"Scanner de fichiers",
+ links:"Analyse des liens",apk:"Analyse APK",
+ integrity:"Contrôle d'intégrité",quarantine:"Quarantaine",
+ reports:"Rapports",settings:"Paramètres"
+};
+
+let history = JSON.parse(localStorage.getItem("asspro_history") || "[]");
+let quarantine = JSON.parse(localStorage.getItem("asspro_quarantine") || "[]");
+let totalFiles = Number(localStorage.getItem("asspro_total") || 0);
+let totalThreats = Number(localStorage.getItem("asspro_threats") || 0);
+
+function saveHistory(message) {
+ history.unshift({date:new Date().toLocaleString("fr-FR"),message});
+ history = history.slice(0,50);
+ localStorage.setItem("asspro_history",JSON.stringify(history));
+}
+
+function updateStats() {
+ localStorage.setItem("asspro_total",totalFiles);
+ localStorage.setItem("asspro_threats",totalThreats);
+}
+
+function go(name) {
+ if(!titles[name]) return;
+
+ document.querySelectorAll(".menu button").forEach(b => {
+   b.classList.toggle("active", b.dataset.page === name);
+ });
+
+ document.getElementById("pageTitle").textContent = titles[name];
+
+ render(name);
+
+ window.scrollTo(0, 0);
+}
+
+document.getElementById("menu").addEventListener("click",e=>{
+ const button=e.target.closest("button[data-page]");
+ if(button) go(button.dataset.page);
+});
+
+document.getElementById("themeButton").addEventListener("click",()=>{
+ document.body.classList.toggle("light");
+ localStorage.setItem("asspro_theme",
+   document.body.classList.contains("light")?"light":"dark");
+});
+
+if(localStorage.getItem("asspro_theme")==="light")
+ document.body.classList.add("light");
+
+function dashboard() {
+ return `
+ <section class="glass hero">
+   <div class="status">● SYSTÈME PRÊT</div>
+   <h2>Votre sécurité, notre priorité.</h2>
+   <p>Analysez vos fichiers, vérifiez vos liens et surveillez l'intégrité de vos données depuis un seul espace.</p>
+   <button class="primary" onclick="go('files')">Commencer une analyse →</button>
+ </section>
+ <section class="stats">
+   <div class="glass stat"><div class="symbol">▤</div><div class="label">Fichiers analysés</div><div class="number">${totalFiles}</div></div>
+   <div class="glass stat"><div class="symbol">◇</div><div class="label">Alertes détectées</div><div class="number">${totalThreats}</div></div>
+   <div class="glass stat"><div class="symbol">⬡</div><div class="label">Éléments en quarantaine</div><div class="number">${quarantine.length}</div></div>
+   <div class="glass stat"><div class="symbol">✓</div><div class="label">État de l'interface</div><div class="number good">Prêt</div></div>
+ </section>
+ <section class="section">
+   <h3>Activité récente</h3>
+   <div class="glass activity">
+   ${history.length ? history.slice(0,5).map(x=>`<div class="list-item">● ${escapeHTML(x.date)} — ${escapeHTML(x.message)}</div>`).join("") : "● Interface initialisée.<br>● En attente d'analyses."}
+   </div>
+ </section>`;
+}
+
+function render(name) {
+ if(name==="dashboard") page.innerHTML=dashboard();
+
+ if(name==="files") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Scanner de fichiers</h3>
+ <p>Sélectionne un ou plusieurs fichiers. Leur empreinte SHA-256 sera calculée localement dans ton navigateur.</p>
+ <input class="field" type="file" id="fileInput" multiple>
+ <button class="primary" onclick="scanFiles()">Analyser les fichiers</button>
+ <div id="fileResult" class="result">En attente de sélection.</div>
+ </section>`;
+
+ if(name==="links") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Analyse élémentaire d'un lien</h3>
+ <p>Vérification de la syntaxe, du protocole et de quelques caractéristiques suspectes. Ce contrôle ne confirme pas la réputation d'un site.</p>
+ <input class="field" id="urlInput" placeholder="https://exemple.com">
+ <button class="primary" onclick="checkLink()">Vérifier le lien</button>
+ <div id="linkResult" class="result">En attente d'un lien.</div>
+ </section>`;
+
+ if(name==="apk") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Analyse de fichier APK</h3>
+ <p>Sélectionne un APK pour calculer son empreinte SHA-256 et examiner ses informations élémentaires. Aucune installation ne sera effectuée.</p>
+ <input class="field" type="file" id="apkInput" accept=".apk,application/vnd.android.package-archive">
+ <button class="primary" onclick="scanAPK()">Examiner l'APK</button>
+ <div id="apkResult" class="result">En attente d'un APK.</div>
+ </section>`;
+
+ if(name==="integrity") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Contrôle d'intégrité</h3>
+ <p>Sélectionne les mêmes fichiers lors des contrôles successifs. ASS PRO comparera leurs empreintes avec la référence enregistrée sur cet appareil.</p>
+ <input class="field" type="file" id="integrityInput" multiple>
+ <button class="primary" onclick="checkIntegrity()">Comparer l'intégrité</button>
+ <button class="secondary" onclick="resetIntegrity()">Effacer la référence</button>
+ <div id="integrityResult" class="result">Aucune vérification effectuée.</div>
+ </section>`;
+
+ if(name==="quarantine") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Quarantaine</h3>
+ <p>Cette version conserve uniquement une liste locale des éléments signalés. Elle ne déplace et ne bloque pas réellement les fichiers.</p>
+ <div class="result">${quarantine.length ? quarantine.map((x,i)=>`<div class="list-item">${escapeHTML(x)} <button class="secondary" onclick="removeQuarantine(${i})">Retirer</button></div>`).join("") : "Aucun élément enregistré."}</div>
+ </section>`;
+
+ if(name==="reports") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Rapports d'activité</h3>
+ <p>Consulte et exporte l'historique local d'ASS PRO.</p>
+ <button class="primary" onclick="exportReport()">Exporter le rapport JSON</button>
+ <div class="result">${history.length ? history.map(x=>`<div class="list-item">${escapeHTML(x.date)} — ${escapeHTML(x.message)}</div>`).join("") : "Aucun rapport disponible."}</div>
+ </section>`;
+
+ if(name==="settings") page.innerHTML=`
+ <section class="page-grid">
+ <div class="glass content-card">
+ <h3>Apparence</h3>
+ <p>Choisis ton thème préféré.</p>
+ <button class="primary" onclick="toggleTheme()">Changer de thème</button>
+ </div>
+ <div class="glass content-card">
+ <h3>Données locales</h3>
+ <p>Efface l'historique enregistré dans ce navigateur.</p>
+ <button class="secondary" onclick="clearHistory()">Effacer l'historique</button>
+ </div>
+ <div class="glass content-card">
+ <h3>Protection</h3>
+ <p>Les analyses de fichiers de cette version sont effectuées localement dans le navigateur.</p>
+ </div>
+ <div class="glass content-card">
+ <h3>À propos</h3>
+ <p>ASS PRO Security Scanner<br>Version 0.2<br>Prototype en développement.</p>
+ </div>
+ </section>`;
+}
+
+function toggleTheme() {
+ document.body.classList.toggle("light");
+ localStorage.setItem("asspro_theme",document.body.classList.contains("light")?"light":"dark");
+}
+
+function escapeHTML(value) {
+ return String(value).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+async function sha256(file) {
+ if(!crypto.subtle) throw new Error("SHA-256 indisponible dans ce navigateur.");
+ const buffer=await file.arrayBuffer();
+ const hash=await crypto.subtle.digest("SHA-256",buffer);
+ return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+
+async function scanFiles() {
+ const files = document.getElementById("fileInput").files;
+ const output = document.getElementById("fileResult");
+
+ if (!files.length) {
+   output.textContent = "Sélectionne d'abord un fichier.";
+   return;
+ }
+
+ output.textContent = "ASS PRO analyse les fichiers avec son moteur Python...";
+
+ let html = "";
+
+ for (const file of files) {
+   try {
+     const formData = new FormData();
+     formData.append("file", file, file.name);
+
+     const response = await fetch("/api/scan", {
+       method: "POST",
+       body: formData
+     });
+
+     const resultat = await response.json();
+
+     if (!response.ok) {
+       throw new Error(resultat.erreur || "Erreur du serveur");
+     }
+
+     const alertes = Array.isArray(resultat.alertes)
+       ? resultat.alertes
+       : [];
+
+     const statut = resultat.statut || "INCONNU";
+
+     let classe = "good";
+
+     if (statut === "DETECTION") {
+       classe = "bad";
+     } else if (statut === "A_VERIFIER" || statut === "ERREUR") {
+       classe = "warning";
+     }
+
+     html += `
+       <div class="list-item">
+         <b>${escapeHTML(resultat.nom_fichier || file.name)}</b><br>
+         Taille : ${Number(resultat.taille || 0)} octets<br>
+         SHA-256 : ${escapeHTML(resultat.sha256 || "Indisponible")}<br>
+         Statut :
+         <span class="${classe}">${escapeHTML(statut)}</span>
+         <br>
+         Alertes :
+         ${alertes.length
+           ? alertes.map(a => escapeHTML(a)).join("<br>")
+           : "Aucune alerte relevée"}
+       </div>
+     `;
+
+     totalFiles++;
+
+     if (statut === "DETECTION") {
+       totalThreats++;
+     }
+
+     saveHistory("Analyse Python : " + file.name + " — " + statut);
+
+   } catch (e) {
+     html += `
+       <div class="list-item bad">
+         <b>${escapeHTML(file.name)}</b><br>
+         Erreur : ${escapeHTML(e.message)}
+       </div>
+     `;
+   }
+ }
+
+ updateStats();
+ output.innerHTML = html;
+}
+
+
+async function scanAPK() {
+ const file=document.getElementById("apkInput").files[0];
+ const output=document.getElementById("apkResult");
+ if(!file) {output.textContent="Sélectionne un fichier APK.";return;}
+ output.textContent="Calcul de l'empreinte...";
+ try {
+  const hash=await sha256(file);
+  output.innerHTML=`Nom : ${escapeHTML(file.name)}<br>Taille : ${file.size} octets<br>SHA-256 : ${hash}<br><span class="warning">Analyse structurelle et antivirus APK non encore connectés.</span>`;
+  saveHistory("Empreinte APK calculée : "+file.name);
+  totalFiles++;updateStats();
+ } catch(e) {output.textContent=e.message;}
+}
+
+function checkLink() {
+ const raw=document.getElementById("urlInput").value.trim();
+ const output=document.getElementById("linkResult");
+ if(!raw) {output.textContent="Entre un lien.";return;}
+ try {
+  const url=new URL(raw);
+  const alerts=[];
+  if(!["http:","https:"].includes(url.protocol)) alerts.push("Protocole inhabituel");
+  if(url.protocol==="http:") alerts.push("Connexion non chiffrée");
+  if(url.username||url.password) alerts.push("Identifiants intégrés dans l'adresse");
+  if(url.hostname.startsWith("xn--")||url.hostname.includes(".xn--")) alerts.push("Nom de domaine international à examiner");
+  if(["bit.ly","tinyurl.com","t.co","is.gd","cutt.ly"].includes(url.hostname)) alerts.push("Raccourcisseur de lien");
+  const safe=!alerts.length;
+  output.innerHTML=`Domaine : ${escapeHTML(url.hostname)}<br>Protocole : ${escapeHTML(url.protocol)}<br><span class="${safe?"good":"warning"}">${safe?"Aucun indice élémentaire relevé":"Points à examiner : "+alerts.map(escapeHTML).join(" ; ")}</span><br><br><small>Ce résultat ne garantit pas que le site est sûr. Aucune réputation en ligne n'a été consultée.</small>`;
+  saveHistory("Lien examiné : "+url.hostname);
+ } catch(e) {
+  output.innerHTML='<span class="bad">Adresse invalide. Vérifie le format du lien.</span>';
+ }
+}
+
+async function checkIntegrity() {
+ const files=document.getElementById("integrityInput").files;
+ const output=document.getElementById("integrityResult");
+ if(!files.length) {output.textContent="Sélectionne les fichiers à contrôler.";return;}
+ output.textContent="Comparaison en cours...";
+ let baseline=JSON.parse(localStorage.getItem("asspro_baseline")||"{}");
+ let html="";
+ for(const file of files) {
+  try {
+   const hash=await sha256(file);
+   const key=file.name+"|"+file.size;
+   if(!baseline[key]) {
+    baseline[key]=hash;
+    html+=`<div class="list-item good">${escapeHTML(file.name)} : référence créée.</div>`;
+   } else if(baseline[key]===hash) {
+    html+=`<div class="list-item good">${escapeHTML(file.name)} : aucune modification détectée.</div>`;
+   } else {
+    html+=`<div class="list-item warning">${escapeHTML(file.name)} : empreinte différente !</div>`;
+   }
+  } catch(e) {
+   html+=`<div class="list-item bad">${escapeHTML(file.name)} : erreur de lecture.</div>`;
+  }
+ }
+ localStorage.setItem("asspro_baseline",JSON.stringify(baseline));
+ output.innerHTML=html;
+ saveHistory("Contrôle d'intégrité effectué");
+}
+
+function resetIntegrity() {
+ localStorage.removeItem("asspro_baseline");
+ document.getElementById("integrityResult").textContent="Référence effacée.";
+}
+
+function removeQuarantine(index) {
+ quarantine.splice(index,1);
+ localStorage.setItem("asspro_quarantine",JSON.stringify(quarantine));
+ render("quarantine");
+}
+
+function exportReport() {
+ const data={application:"ASS PRO Security Scanner",date:new Date().toISOString(),historique:history};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="ass_pro_rapport.json";a.click();
+ URL.revokeObjectURL(url);
+}
+
+function clearHistory() {
+ if(!confirm("Effacer tout l'historique local ?")) return;
+ history=[];
+ localStorage.setItem("asspro_history","[]");
+ saveHistory("Historique réinitialisé");
+ go("settings");
+}
+
+go("dashboard");
+</script>
+</body>
+</html>

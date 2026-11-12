@@ -1,0 +1,31 @@
+__pycache__/
+*.pyc
+*.pyo
+*.log
+
+# Donnees privees et resultats d'analyse
+reports/
+quarantine/
+runtime_uploads/
+privacy/
+communication/
+sauvegardes/
+zone_test/
+
+# Secrets et configurations locales
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Fichiers temporaires
+*.sha256
+.DS_Store
+
+# Fichiers locaux et sauvegardes
+baseline.json
+*.bak
+*.pyh
+interface/*backup*.html
