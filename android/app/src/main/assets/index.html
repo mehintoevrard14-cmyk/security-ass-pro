@@ -55,12 +55,13 @@ button {cursor:pointer}
 .brand span {color:var(--accent)}
 .tagline {font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:2px}
 .menu {
-  display:flex;gap:8px;overflow-x:auto;
-  scrollbar-width:none;margin-top:18px;padding-bottom:2px;
+  display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;
+  scrollbar-width:none;margin-top:15px;padding:0 2px 5px;
+  -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;
 }
 .menu::-webkit-scrollbar {display:none}
 .menu button {
-  flex-shrink:0;border:1px solid transparent;
+  flex:0 0 auto;scroll-snap-align:start;border:1px solid transparent;
   border-radius:15px;padding:12px 15px;
   color:var(--muted);background:transparent;
   transition:.25s;
@@ -417,14 +418,31 @@ body {
   .glass {border-radius:18px}
 }
 
+
+.brand-row {display:flex;align-items:center;gap:10px;min-height:48px}
+.brand-mark {width:44px;height:44px;object-fit:cover;border-radius:13px;
+  box-shadow:0 0 18px rgba(34,211,238,.22);border:1px solid rgba(34,211,238,.35)}
+.brand {line-height:1.05;font-size:23px;font-weight:850;letter-spacing:-.8px}
+.tagline {font-size:9px;letter-spacing:2.2px;color:var(--muted);margin-top:5px}
+@media(max-width:550px) {
+  .brand-mark {width:42px;height:42px}
+  .brand {font-size:21px}
+  .tagline {font-size:8px;letter-spacing:1.8px}
+}
+
 </style>
 </head>
 
 <body>
 <div class="app">
 <aside class="sidebar">
-  <div class="brand">Security <span>ASS PRO</span></div>
-  <div class="tagline">ANALYSE · DÉTECTE · PROTÈGE</div>
+  <div class="brand-row">
+    <img class="brand-mark" src="security-ass-pro-mark.png" alt="Logo Security ASS PRO">
+    <div>
+      <div class="brand">Security <span>ASS PRO</span></div>
+      <div class="tagline">SCAN · DÉTECTE · PROTÈGE</div>
+    </div>
+  </div>
   <nav class="menu" id="menu">
     <button class="active" data-page="dashboard">◈ Accueil</button>
     <button data-page="files">▤ Fichiers</button>
@@ -598,7 +616,10 @@ function render(name) {
  </div>
  <div class="glass content-card">
  <h3>À propos</h3>
- <p>ASS PRO Security Scanner<br>Version 0.2<br>Prototype en développement.</p>
+ <img src="security-ass-pro-logo.png" alt="Security ASS PRO — Scan, Détecte, Protège"
+      style="display:block;width:min(100%,260px);margin:8px auto 14px;border-radius:18px">
+ <p><strong>Security ASS PRO</strong><br>Version 1.1 · Scan · Détecte · Protège<br>
+ Votre centre personnel d'analyse et de contrôle de sécurité numérique.</p>
  </div>
  </section>`;
 }
@@ -622,86 +643,103 @@ async function sha256(file) {
 }
 
 
+
+window.onNativeScanMessage = function(message) {
+    document.getElementById("fileResult").textContent = message;
+};
+
+window.onNativeScanResults = function(results) {
+    const output = document.getElementById("fileResult");
+    if (!output) return;
+
+    let html = "";
+
+    for (const resultat of results) {
+        const nom = resultat.nom_fichier || "Fichier inconnu";
+        const statut = resultat.statut || "INCONNU";
+        const alertes = Array.isArray(resultat.alertes)
+            ? resultat.alertes : [];
+
+        let classe = "good";
+        if (statut === "DETECTION") classe = "bad";
+        if (statut === "A_VERIFIER" || statut === "ERREUR")
+            classe = "warning";
+
+        html += `
+          <div class="list-item">
+            <b>${escapeHTML(nom)}</b><br>
+            Taille : ${Number(resultat.taille || 0)} octets<br>
+            SHA-256 : ${escapeHTML(resultat.sha256 || "Indisponible")}<br>
+            Statut :
+            <span class="${classe}">${escapeHTML(statut)}</span><br>
+            Alertes :
+            ${alertes.length
+                ? alertes.map(a => escapeHTML(a)).join("<br>")
+                : "Aucune alerte élémentaire relevée"}
+          </div>
+        `;
+
+        totalFiles++;
+
+        if (statut === "DETECTION") totalThreats++;
+
+        saveHistory("Analyse Android : " + nom + " — " + statut);
+    }
+
+    updateStats();
+    output.innerHTML = html || "Aucun résultat.";
+};
+
 async function scanFiles() {
- const files = document.getElementById("fileInput").files;
- const output = document.getElementById("fileResult");
+    const output = document.getElementById("fileResult");
 
- if (!files.length) {
-   output.textContent = "Sélectionne d'abord un fichier.";
-   return;
- }
+    if (window.Android &&
+        typeof Android.openFilePicker === "function") {
+        output.textContent = "Ouverture du gestionnaire de fichiers...";
+        Android.openFilePicker();
+        return;
+    }
 
- output.textContent = "ASS PRO analyse les fichiers avec son moteur Python...";
+    const files = document.getElementById("fileInput").files;
 
- let html = "";
+    if (!files.length) {
+        output.textContent = "Sélectionne d'abord un fichier.";
+        return;
+    }
 
- for (const file of files) {
-   try {
-     const formData = new FormData();
-     formData.append("file", file, file.name);
+    output.textContent = "Analyse locale en cours...";
+    let html = "";
 
-     const response = await fetch("/api/scan", {
-       method: "POST",
-       body: formData
-     });
+    for (const file of files) {
+        try {
+            const hash = await sha256(file);
+            const suspect = /\.(apk|exe|bat|cmd|scr|vbs|ps1|jar)$/i.test(file.name);
+            const statut = file.size === 0 || suspect
+                ? "A_VERIFIER" : "OK";
 
-     const resultat = await response.json();
+            html += `
+              <div class="list-item">
+                <b>${escapeHTML(file.name)}</b><br>
+                Taille : ${file.size} octets<br>
+                SHA-256 : ${hash}<br>
+                Statut : <span class="${suspect || file.size === 0
+                    ? "warning" : "good"}">${statut}</span><br>
+                ${suspect
+                    ? "Extension à examiner."
+                    : file.size === 0 ? "Fichier vide." : "Aucune alerte élémentaire."}
+              </div>
+            `;
 
-     if (!response.ok) {
-       throw new Error(resultat.erreur || "Erreur du serveur");
-     }
+            totalFiles++;
+            saveHistory("Empreinte locale : " + file.name + " — " + statut);
+        } catch (e) {
+            html += `<div class="list-item bad">${escapeHTML(file.name)} : ${escapeHTML(e.message)}</div>`;
+        }
+    }
 
-     const alertes = Array.isArray(resultat.alertes)
-       ? resultat.alertes
-       : [];
-
-     const statut = resultat.statut || "INCONNU";
-
-     let classe = "good";
-
-     if (statut === "DETECTION") {
-       classe = "bad";
-     } else if (statut === "A_VERIFIER" || statut === "ERREUR") {
-       classe = "warning";
-     }
-
-     html += `
-       <div class="list-item">
-         <b>${escapeHTML(resultat.nom_fichier || file.name)}</b><br>
-         Taille : ${Number(resultat.taille || 0)} octets<br>
-         SHA-256 : ${escapeHTML(resultat.sha256 || "Indisponible")}<br>
-         Statut :
-         <span class="${classe}">${escapeHTML(statut)}</span>
-         <br>
-         Alertes :
-         ${alertes.length
-           ? alertes.map(a => escapeHTML(a)).join("<br>")
-           : "Aucune alerte relevée"}
-       </div>
-     `;
-
-     totalFiles++;
-
-     if (statut === "DETECTION") {
-       totalThreats++;
-     }
-
-     saveHistory("Analyse Python : " + file.name + " — " + statut);
-
-   } catch (e) {
-     html += `
-       <div class="list-item bad">
-         <b>${escapeHTML(file.name)}</b><br>
-         Erreur : ${escapeHTML(e.message)}
-       </div>
-     `;
-   }
- }
-
- updateStats();
- output.innerHTML = html;
+    updateStats();
+    output.innerHTML = html;
 }
-
 
 async function scanAPK() {
  const file=document.getElementById("apkInput").files[0];

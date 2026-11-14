@@ -29,3 +29,8 @@ baseline.json
 *.bak
 *.pyh
 interface/*backup*.html
+
+# Fichiers Gradle et Android locaux
+.gradle/
+**/build/
+local.properties
