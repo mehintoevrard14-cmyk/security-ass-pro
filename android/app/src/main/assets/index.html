@@ -693,13 +693,6 @@ window.onNativeScanResults = function(results) {
 async function scanFiles() {
     const output = document.getElementById("fileResult");
 
-    if (window.Android &&
-        typeof Android.openFilePicker === "function") {
-        output.textContent = "Ouverture du gestionnaire de fichiers...";
-        Android.openFilePicker();
-        return;
-    }
-
     const files = document.getElementById("fileInput").files;
 
     if (!files.length) {

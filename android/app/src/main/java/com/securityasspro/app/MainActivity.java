@@ -10,6 +10,8 @@ import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
+import android.webkit.ValueCallback;
 import android.graphics.Color;
 
 import org.json.JSONArray;
@@ -22,6 +24,7 @@ import java.util.Locale;
 public class MainActivity extends Activity {
 
     private WebView webView;
+private ValueCallback<Uri[]> filePathCallback;
     private static final int REQUEST_FILES = 1001;
 
     @Override
@@ -55,6 +58,35 @@ public class MainActivity extends Activity {
         });
 
         setContentView(webView);
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(
+                    WebView view,
+                    ValueCallback<Uri[]> callback,
+                    FileChooserParams params
+            ) {
+                if (filePathCallback != null) {
+                    filePathCallback.onReceiveValue(null);
+                }
+
+                filePathCallback = callback;
+
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
+                try {
+                    startActivityForResult(intent, 1002);
+                } catch (Exception e) {
+                    filePathCallback = null;
+                    return false;
+                }
+
+                return true;
+            }
+        });
+
         webView.loadUrl("file:///android_asset/index.html");
     }
 
@@ -79,6 +111,29 @@ public class MainActivity extends Activity {
             Intent data
     ) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1002) {
+            if (filePathCallback == null) return;
+
+            Uri[] results = null;
+
+            if (resultCode == RESULT_OK && data != null) {
+                if (data.getClipData() != null) {
+                    int count = data.getClipData().getItemCount();
+                    results = new Uri[count];
+
+                    for (int i = 0; i < count; i++) {
+                        results[i] = data.getClipData().getItemAt(i).getUri();
+                    }
+                } else if (data.getData() != null) {
+                    results = new Uri[]{data.getData()};
+                }
+            }
+
+            filePathCallback.onReceiveValue(results);
+            filePathCallback = null;
+            return;
+        }
 
         if (requestCode != REQUEST_FILES) return;
 
