@@ -13,6 +13,9 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.ValueCallback;
 import android.graphics.Color;
+import android.graphics.Insets;
+import android.os.Build;
+import android.view.WindowInsets;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,6 +40,27 @@ private ValueCallback<Uri[]> filePathCallback;
         webView = new WebView(this);
         webView.setBackgroundColor(Color.rgb(8, 13, 27));
 
+        // Respecter les barres système Android (statut et navigation).
+        webView.setOnApplyWindowInsetsListener((view, insets) -> {
+            int top;
+            int bottom;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Insets bars = insets.getInsets(
+                    WindowInsets.Type.systemBars()
+                    | WindowInsets.Type.displayCutout()
+                );
+                top = bars.top;
+                bottom = bars.bottom;
+            } else {
+                top = insets.getSystemWindowInsetTop();
+                bottom = insets.getSystemWindowInsetBottom();
+            }
+
+            view.setPadding(0, top, 0, bottom);
+            return insets;
+        });
+
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
@@ -58,6 +82,7 @@ private ValueCallback<Uri[]> filePathCallback;
         });
 
         setContentView(webView);
+        webView.requestApplyInsets();
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onShowFileChooser(
