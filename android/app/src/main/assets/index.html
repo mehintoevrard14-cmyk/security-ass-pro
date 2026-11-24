@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080d1b">
-<title>Security ASS PRO</title>
+<title>Security ASS PRO 2.0</title>
 <style>
 :root {
   color-scheme: dark;
@@ -445,11 +445,16 @@ body {
   </div>
   <nav class="menu" id="menu">
     <button class="active" data-page="dashboard">◈ Accueil</button>
+    <button data-page="quick">⚡ Analyse rapide</button>
+    <button data-page="full">▣ Analyse complète</button>
+    <button data-page="custom">☷ Analyse personnalisée</button>
     <button data-page="files">▤ Fichiers</button>
     <button data-page="links">↗ Liens</button>
     <button data-page="apk">▣ APK</button>
-    <button data-page="integrity">⌕ Intégrité</button>
+    <button data-page="apps">▦ Applications</button>
+    <button data-page="protection">⌕ Protection</button>
     <button data-page="quarantine">⬡ Quarantaine</button>
+    <button data-page="history">◷ Historique</button>
     <button data-page="reports">▧ Rapports</button>
     <button data-page="settings">⚙ Paramètres</button>
   </nav>
@@ -471,9 +476,13 @@ body {
 <script>
 const page = document.getElementById("page");
 const titles = {
- dashboard:"Tableau de bord",files:"Scanner de fichiers",
- links:"Analyse des liens",apk:"Analyse APK",
- integrity:"Contrôle d'intégrité",quarantine:"Quarantaine",
+ dashboard:"Tableau de bord",
+ quick:"Analyse rapide",full:"Analyse complète",
+ custom:"Analyse personnalisée",
+ files:"Scanner de fichiers",links:"Analyse des liens",
+ apk:"Analyse APK",apps:"Applications installées",
+ protection:"Protection et intégrité",
+ quarantine:"Quarantaine",history:"Historique",
  reports:"Rapports",settings:"Paramètres"
 };
 
@@ -546,6 +555,33 @@ function dashboard() {
 function render(name) {
  if(name==="dashboard") page.innerHTML=dashboard();
 
+ if(name==="quick") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Analyse rapide</h3>
+ <p>Sélectionne un fichier pour effectuer rapidement les contrôles locaux disponibles : lecture, taille, empreinte SHA-256 et indices élémentaires.</p>
+ <input class="field" type="file" id="fileInput">
+ <button class="primary" onclick="scanFiles()">Lancer l'analyse rapide</button>
+ <div id="fileResult" class="result">En attente de sélection.</div>
+ </section>`;
+
+ if(name==="full") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Analyse complète des fichiers sélectionnés</h3>
+ <p>Sélectionne plusieurs fichiers pour les examiner. Cette analyse porte uniquement sur les fichiers choisis et accessibles ; elle ne scanne pas automatiquement tout le téléphone.</p>
+ <input class="field" type="file" id="fileInput" multiple>
+ <button class="primary" onclick="scanFiles()">Lancer l'analyse</button>
+ <div id="fileResult" class="result">En attente de sélection.</div>
+ </section>`;
+
+ if(name==="custom") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Analyse personnalisée</h3>
+ <p>Choisis précisément les fichiers que tu souhaites examiner. Aucun fichier ne sera installé ni envoyé à un serveur.</p>
+ <input class="field" type="file" id="fileInput" multiple>
+ <button class="primary" onclick="scanFiles()">Analyser ma sélection</button>
+ <div id="fileResult" class="result">En attente de sélection.</div>
+ </section>`;
+
  if(name==="files") page.innerHTML=`
  <section class="glass content-card section">
  <h3>Scanner de fichiers</h3>
@@ -573,7 +609,14 @@ function render(name) {
  <div id="apkResult" class="result">En attente d'un APK.</div>
  </section>`;
 
- if(name==="integrity") page.innerHTML=`
+ if(name==="apps") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Applications installées</h3>
+ <p>L'inventaire Android sera connecté au module natif dans une prochaine étape. Android limite la visibilité des applications accessibles à chaque application.</p>
+ <div class="result">Module d'inventaire en préparation. Aucune liste fictive n'est affichée.</div>
+ </section>`;
+
+ if(name==="protection") page.innerHTML=`
  <section class="glass content-card section">
  <h3>Contrôle d'intégrité</h3>
  <p>Sélectionne les mêmes fichiers lors des contrôles successifs. ASS PRO comparera leurs empreintes avec la référence enregistrée sur cet appareil.</p>
@@ -588,6 +631,13 @@ function render(name) {
  <h3>Quarantaine</h3>
  <p>Cette version conserve uniquement une liste locale des éléments signalés. Elle ne déplace et ne bloque pas réellement les fichiers.</p>
  <div class="result">${quarantine.length ? quarantine.map((x,i)=>`<div class="list-item">${escapeHTML(x)} <button class="secondary" onclick="removeQuarantine(${i})">Retirer</button></div>`).join("") : "Aucun élément enregistré."}</div>
+ </section>`;
+
+ if(name==="history") page.innerHTML=`
+ <section class="glass content-card section">
+ <h3>Historique des analyses</h3>
+ <p>Événements enregistrés localement sur cet appareil.</p>
+ <div class="result">${history.length ? history.map(x=>`<div class="list-item">${escapeHTML(x.date)} — ${escapeHTML(x.message)}</div>`).join("") : "Aucune activité enregistrée."}</div>
  </section>`;
 
  if(name==="reports") page.innerHTML=`
@@ -618,7 +668,7 @@ function render(name) {
  <h3>À propos</h3>
  <img src="security-ass-pro-logo.png" alt="Security ASS PRO — Scan, Détecte, Protège"
       style="display:block;width:min(100%,260px);margin:8px auto 14px;border-radius:18px">
- <p><strong>Security ASS PRO</strong><br>Version 1.1 · Scan · Détecte · Protège<br>
+ <p><strong>Security ASS PRO</strong><br>Version 2.0 · Scan · Détecte · Protège<br>
  Votre centre personnel d'analyse et de contrôle de sécurité numérique.</p>
  </div>
  </section>`;
@@ -691,60 +741,296 @@ window.onNativeScanResults = function(results) {
 };
 
 async function scanFiles() {
-    const output = document.getElementById("fileResult");
+ const output = document.getElementById("fileResult");
+ const input = document.getElementById("fileInput");
+ const files = input.files;
 
-    const files = document.getElementById("fileInput").files;
+ if (!files.length) {
+  output.textContent = "Sélectionne d'abord un fichier.";
+  return;
+ }
 
-    if (!files.length) {
-        output.textContent = "Sélectionne d'abord un fichier.";
-        return;
-    }
+ output.textContent = "Analyse de sécurité locale en cours...";
+ let html = "";
+ let scanned = 0;
+ let alertsCount = 0;
 
-    output.textContent = "Analyse locale en cours...";
-    let html = "";
+ for (const file of files) {
+  try {
+   const hash = await sha256(file);
+   const name = file.name;
+   const lower = name.toLowerCase();
+   const alerts = [];
 
-    for (const file of files) {
-        try {
-            const hash = await sha256(file);
-            const suspect = /\.(apk|exe|bat|cmd|scr|vbs|ps1|jar)$/i.test(file.name);
-            const statut = file.size === 0 || suspect
-                ? "A_VERIFIER" : "OK";
+   const dangerous = /\.(exe|bat|cmd|scr|vbs|ps1|jar|apk)$/i.test(lower);
+   const doubleExtension =
+    /\.(pdf|jpg|jpeg|png|doc|docx|txt)\.(exe|bat|cmd|scr|vbs|ps1|apk)$/i.test(lower);
 
-            html += `
-              <div class="list-item">
-                <b>${escapeHTML(file.name)}</b><br>
-                Taille : ${file.size} octets<br>
-                SHA-256 : ${hash}<br>
-                Statut : <span class="${suspect || file.size === 0
-                    ? "warning" : "good"}">${statut}</span><br>
-                ${suspect
-                    ? "Extension à examiner."
-                    : file.size === 0 ? "Fichier vide." : "Aucune alerte élémentaire."}
-              </div>
-            `;
+   if (file.size === 0) alerts.push("Fichier vide.");
+   if (dangerous) alerts.push("Extension exécutable ou paquet à examiner.");
+   if (doubleExtension) alerts.push("Double extension potentiellement trompeuse.");
 
-            totalFiles++;
-            saveHistory("Empreinte locale : " + file.name + " — " + statut);
-        } catch (e) {
-            html += `<div class="list-item bad">${escapeHTML(file.name)} : ${escapeHTML(e.message)}</div>`;
-        }
-    }
+   let status = alerts.length ? "A_VERIFIER" : "OK";
+   let css = alerts.length ? "warning" : "good";
 
-    updateStats();
-    output.innerHTML = html;
+   if (alerts.length) alertsCount++;
+
+   html += `
+    <div class="list-item">
+     <b>${escapeHTML(name)}</b><br>
+     Taille : ${file.size} octets<br>
+     Type déclaré : ${escapeHTML(file.type || "Non renseigné")}<br>
+     SHA-256 : ${escapeHTML(hash)}<br>
+     Statut : <span class="${css}">${status}</span><br>
+     ${alerts.length
+       ? alerts.map(a => escapeHTML(a)).join("<br>")
+       : "Aucun indice élémentaire relevé."}
+    </div>`;
+
+   scanned++;
+   saveHistory("Analyse locale : " + name + " — " + status);
+
+  } catch (e) {
+   html += `<div class="list-item bad">
+    ${escapeHTML(file.name)} : ${escapeHTML(e.message)}
+   </div>`;
+  }
+ }
+
+ totalFiles += scanned;
+ totalThreats += alertsCount;
+ updateStats();
+
+ output.innerHTML = html || "Aucun résultat.";
 }
 
 async function scanAPK() {
- const file=document.getElementById("apkInput").files[0];
- const output=document.getElementById("apkResult");
- if(!file) {output.textContent="Sélectionne un fichier APK.";return;}
- output.textContent="Calcul de l'empreinte...";
+ const file = document.getElementById("apkInput").files[0];
+ const output = document.getElementById("apkResult");
+
+ if (!file) {
+  output.textContent = "Sélectionne un fichier APK.";
+  return;
+ }
+
+ output.textContent = "Analyse de la structure APK en cours...";
+
  try {
-  const hash=await sha256(file);
-  output.innerHTML=`Nom : ${escapeHTML(file.name)}<br>Taille : ${file.size} octets<br>SHA-256 : ${hash}<br><span class="warning">Analyse structurelle et antivirus APK non encore connectés.</span>`;
-  saveHistory("Empreinte APK calculée : "+file.name);
-  totalFiles++;updateStats();
- } catch(e) {output.textContent=e.message;}
+  const hash = await sha256(file);
+  const alerts = [];
+  const names = [];
+  const suspicious = [];
+  let dexCount = 0;
+  let nativeCount = 0;
+  let signedV1 = false;
+  let manifestFound = false;
+  let resourcesFound = false;
+  let entries = 0;
+  let totalUncompressed = 0;
+
+  if (file.size < 22) {
+   throw new Error("Fichier trop petit pour être une archive ZIP valide.");
+  }
+
+  const tailLength = Math.min(file.size, 65557);
+  const tailStart = file.size - tailLength;
+  const tail = new DataView(
+   await file.slice(tailStart).arrayBuffer()
+  );
+
+  let eocd = -1;
+
+  for (let i = tail.byteLength - 22; i >= 0; i--) {
+   if (tail.getUint32(i, true) === 0x06054b50) {
+    const commentLength = tail.getUint16(i + 20, true);
+    if (i + 22 + commentLength === tail.byteLength) {
+     eocd = i;
+     break;
+    }
+   }
+  }
+
+  if (eocd === -1) {
+   throw new Error("Structure ZIP invalide : fin d'archive introuvable.");
+  }
+
+  const disk = tail.getUint16(eocd + 4, true);
+  const centralDisk = tail.getUint16(eocd + 6, true);
+  const diskEntries = tail.getUint16(eocd + 8, true);
+  const totalEntries = tail.getUint16(eocd + 10, true);
+  const centralSize = tail.getUint32(eocd + 12, true);
+  const centralOffset = tail.getUint32(eocd + 16, true);
+
+  if (disk !== 0 || centralDisk !== 0 || diskEntries !== totalEntries) {
+   throw new Error("Archive ZIP multi-disque non prise en charge.");
+  }
+
+  if (
+   totalEntries === 0xffff ||
+   centralSize === 0xffffffff ||
+   centralOffset === 0xffffffff
+  ) {
+   throw new Error("Archive ZIP64 détectée : format non pris en charge par cette version.");
+  }
+
+  if (
+   centralSize > 32 * 1024 * 1024 ||
+   centralOffset + centralSize > file.size
+  ) {
+   throw new Error("Répertoire central ZIP incohérent ou trop volumineux.");
+  }
+
+  const central = new DataView(
+   await file.slice(centralOffset, centralOffset + centralSize).arrayBuffer()
+  );
+
+  let pos = 0;
+
+  while (pos + 46 <= central.byteLength && entries < totalEntries) {
+   if (central.getUint32(pos, true) !== 0x02014b50) {
+    throw new Error("Entrée ZIP invalide dans le répertoire central.");
+   }
+
+   const flags = central.getUint16(pos + 8, true);
+   const method = central.getUint16(pos + 10, true);
+   const compressed = central.getUint32(pos + 20, true);
+   const uncompressed = central.getUint32(pos + 24, true);
+   const nameLength = central.getUint16(pos + 28, true);
+   const extraLength = central.getUint16(pos + 30, true);
+   const commentLength = central.getUint16(pos + 32, true);
+
+   const next = pos + 46 + nameLength + extraLength + commentLength;
+
+   if (next > central.byteLength) {
+    throw new Error("Entrée ZIP incomplète.");
+   }
+
+   const nameBytes = new Uint8Array(
+    central.buffer,
+    central.byteOffset + pos + 46,
+    nameLength
+   );
+
+   const name = new TextDecoder("utf-8").decode(nameBytes);
+   const lower = name.toLowerCase();
+
+   names.push(lower);
+   entries++;
+   totalUncompressed += uncompressed;
+
+   if (lower === "androidmanifest.xml") manifestFound = true;
+   if (lower === "resources.arsc") resourcesFound = true;
+   if (/(^|\/)classes\d*\.dex$/i.test(name)) dexCount++;
+   if (/^lib\/[^/]+\/[^/]+\.so$/i.test(name)) nativeCount++;
+
+   if (/^meta-inf\/[^/]+\.(rsa|dsa|ec)$/i.test(name)) {
+    signedV1 = true;
+   }
+
+   if (
+    lower.startsWith("/") ||
+    lower.includes("../") ||
+    lower.includes("..\\")
+   ) {
+    suspicious.push("Chemin de fichier inhabituel : " + name);
+   }
+
+   if (/\.(sh|py|bat|cmd|ps1)$/i.test(lower)) {
+    suspicious.push("Script exécutable présent : " + name);
+   }
+
+   if (/(meterpreter|payload|exploit|keylogger)/i.test(lower)) {
+    suspicious.push("Nom de fichier associé à un outil sensible : " + name);
+   }
+
+   if (flags & 1) {
+    alerts.push("Entrée ZIP chiffrée détectée : " + name);
+   }
+
+   if (method !== 0 && method !== 8) {
+    alerts.push("Méthode de compression inhabituelle : " + name);
+   }
+
+   pos = next;
+  }
+
+  if (entries !== totalEntries) {
+   alerts.push("Nombre d'entrées ZIP différent de celui annoncé.");
+  }
+
+  if (!manifestFound) {
+   alerts.push("AndroidManifest.xml introuvable.");
+  }
+
+  if (!dexCount) {
+   alerts.push("Aucun fichier DEX détecté.");
+  }
+
+  if (!resourcesFound) {
+   alerts.push("resources.arsc absent : à examiner selon le type d'APK.");
+  }
+
+  alerts.push(...suspicious);
+
+  const risk = alerts.length === 0
+   ? "Aucun indice structurel élémentaire relevé"
+   : alerts.length >= 5
+    ? "Risque structurel élevé : vérification approfondie recommandée"
+    : "Éléments à examiner";
+
+  const css = alerts.length >= 5
+   ? "bad"
+   : alerts.length
+    ? "warning"
+    : "good";
+
+  const shown = alerts.slice(0, 15);
+
+  output.innerHTML = `
+   <div class="list-item">
+    <b>${escapeHTML(file.name)}</b><br>
+    Taille : ${file.size} octets<br>
+    SHA-256 : <small>${escapeHTML(hash)}</small><br><br>
+
+    <b>Structure ZIP</b><br>
+    Archive : <span class="good">Structure reconnue</span><br>
+    Entrées : ${entries}<br>
+    Taille décompressée annoncée : ${totalUncompressed} octets<br><br>
+
+    <b>Éléments Android</b><br>
+    AndroidManifest.xml : ${manifestFound ? "Présent" : "Absent"}<br>
+    resources.arsc : ${resourcesFound ? "Présent" : "Absent"}<br>
+    Fichiers DEX : ${dexCount}<br>
+    Bibliothèques natives : ${nativeCount}<br>
+    Certificat de signature V1 : ${signedV1 ? "Présent" : "Non détecté"}<br><br>
+
+    <b>Résultat structurel</b><br>
+    <span class="${css}">${escapeHTML(risk)}</span><br><br>
+
+    <b>Alertes (${alerts.length})</b><br>
+    ${shown.length
+     ? shown.map(a => escapeHTML(a)).join("<br>")
+     : "Aucune alerte élémentaire."}
+    ${alerts.length > 15 ? "<br>Autres alertes non affichées." : ""}
+
+    <br><br><small>
+    Cette analyse inspecte la structure ZIP et les noms des fichiers.
+    Elle ne décompresse pas le code, ne vérifie pas cryptographiquement
+    la signature et ne confirme pas l'absence de malware.
+    L'absence d'un certificat V1 ne signifie pas que l'APK est non signé :
+    les signatures Android V2/V3/V4 ne sont pas vérifiées ici.
+    </small>
+   </div>`;
+
+  saveHistory("Analyse structurelle APK : " + file.name);
+  totalFiles++;
+  if (alerts.length) totalThreats++;
+  updateStats();
+
+ } catch(e) {
+  output.innerHTML =
+   `<span class="bad">Analyse impossible : ${escapeHTML(e.message)}</span>`;
+ }
 }
 
 function checkLink() {
