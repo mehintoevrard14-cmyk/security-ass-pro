@@ -1168,6 +1168,240 @@ body.light .empty-state small {
   }
 }
 
+
+/* ===== LIQUID GLASS 2026 - FINITION PREMIUM ===== */
+
+:root {
+  --glass-blur: 16px;
+  --glass-highlight: rgba(255,255,255,.20);
+  --glass-surface: rgba(22,38,68,.48);
+  --glass-edge: rgba(190,225,255,.22);
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(40,180,255,.16), transparent 38%),
+    radial-gradient(ellipse at 85% 35%, rgba(139,92,246,.16), transparent 40%),
+    radial-gradient(ellipse at 50% 95%, rgba(20,210,220,.10), transparent 40%),
+    var(--bg);
+}
+
+.glass {
+  border: 1px solid var(--glass-edge);
+  background:
+    linear-gradient(145deg,
+      rgba(255,255,255,.13),
+      rgba(255,255,255,.025) 48%,
+      rgba(75,160,255,.075)),
+    var(--glass-surface);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.20),
+    inset 0 1px 1px rgba(255,255,255,.24),
+    inset 0 -1px 1px rgba(255,255,255,.05);
+}
+
+.glass::before {
+  background:
+    linear-gradient(125deg,
+      rgba(255,255,255,.22),
+      transparent 30%,
+      transparent 72%,
+      rgba(66,223,255,.10));
+}
+
+.hero {
+  background:
+    radial-gradient(circle at 85% 20%, rgba(66,223,255,.22), transparent 35%),
+    linear-gradient(125deg,rgba(25,130,165,.48),rgba(100,75,170,.42)),
+    var(--glass-surface);
+  border-color: rgba(120,220,255,.30);
+}
+
+.stat,
+.activity,
+.quick-card,
+.content-card,
+.tool-page,
+.setting-card {
+  border-color: var(--glass-edge);
+  box-shadow:
+    0 12px 35px rgba(0,0,0,.15),
+    inset 0 1px rgba(255,255,255,.15);
+}
+
+.tool-page {
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.075),rgba(70,130,220,.035)),
+    rgba(15,28,51,.66);
+  -webkit-backdrop-filter: blur(17px) saturate(175%);
+  backdrop-filter: blur(17px) saturate(175%);
+  border-color: rgba(160,205,255,.22);
+}
+
+.sidebar {
+  background:
+    linear-gradient(155deg,rgba(25,55,90,.83),rgba(10,19,40,.84)),
+    var(--glass-surface);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-right: 1px solid rgba(150,215,255,.20);
+}
+
+.menu button,
+.theme,
+.secondary,
+.action,
+.nav-toggle {
+  border: 1px solid rgba(180,220,255,.18);
+  background: linear-gradient(145deg,
+    rgba(255,255,255,.10),
+    rgba(255,255,255,.025));
+  -webkit-backdrop-filter: blur(12px) saturate(170%);
+  backdrop-filter: blur(12px) saturate(170%);
+  box-shadow: inset 0 1px rgba(255,255,255,.12);
+}
+
+.menu button.active {
+  background: linear-gradient(110deg,
+    rgba(66,223,255,.23),
+    rgba(162,138,255,.20));
+  border-color: rgba(100,220,255,.42);
+  box-shadow:
+    inset 3px 0 #42dfff,
+    inset 0 1px rgba(255,255,255,.20),
+    0 5px 22px rgba(40,180,255,.10);
+}
+
+.primary {
+  border: 1px solid rgba(255,255,255,.28);
+  background: linear-gradient(115deg,#42dfff,#9b8cff);
+  box-shadow:
+    0 8px 25px rgba(66,223,255,.20),
+    inset 0 1px rgba(255,255,255,.40);
+}
+
+.field,
+.result,
+.notice-panel,
+.app-status-card,
+.report-export-card,
+.count-pill {
+  border-color: rgba(160,210,255,.20);
+  background: linear-gradient(135deg,
+    rgba(255,255,255,.075),
+    rgba(75,130,220,.045));
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  backdrop-filter: blur(12px) saturate(150%);
+}
+
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(66,223,255,.12);
+}
+
+.quick-card:hover,
+.theme:hover,
+.secondary:hover,
+.action:hover,
+.menu button:hover {
+  border-color: rgba(90,220,255,.48);
+  box-shadow:
+    0 8px 25px rgba(50,180,255,.12),
+    inset 0 1px rgba(255,255,255,.20);
+}
+
+.quick-icon,
+.status-symbol,
+.setting-icon {
+  border: 1px solid rgba(150,220,255,.15);
+  box-shadow: inset 0 1px rgba(255,255,255,.16);
+}
+
+.nav-overlay {
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+}
+
+body.light {
+  --glass-surface: rgba(255,255,255,.52);
+  --glass-edge: rgba(75,110,165,.20);
+  --glass-highlight: rgba(255,255,255,.75);
+}
+
+body.light .glass,
+body.light .tool-page {
+  background:
+    linear-gradient(140deg,
+      rgba(255,255,255,.72),
+      rgba(220,235,255,.30)),
+    rgba(245,249,255,.55);
+  border-color: rgba(100,130,180,.20);
+  box-shadow:
+    0 15px 38px rgba(60,85,130,.10),
+    inset 0 1px rgba(255,255,255,.85);
+}
+
+body.light .sidebar {
+  background: rgba(241,247,255,.88);
+  border-right-color: var(--glass-edge);
+}
+
+body.light .menu button,
+body.light .theme,
+body.light .secondary,
+body.light .action,
+body.light .field,
+body.light .result {
+  background: rgba(255,255,255,.58);
+  border-color: rgba(90,120,170,.19);
+}
+
+@media (max-width:700px) {
+  :root {
+    --glass-blur: 13px;
+  }
+
+  .glass {
+    -webkit-backdrop-filter: blur(13px) saturate(165%);
+    backdrop-filter: blur(13px) saturate(165%);
+  }
+
+  .tool-page {
+    padding: 21px !important;
+  }
+
+  .sidebar {
+    -webkit-backdrop-filter: blur(17px) saturate(175%);
+    backdrop-filter: blur(17px) saturate(175%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .glass,
+  .quick-card,
+  .primary,
+  .theme,
+  .secondary,
+  .action {
+    transition:
+      background .3s ease,
+      border-color .3s ease,
+      box-shadow .3s ease,
+      transform .25s ease;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px))) {
+  .glass,
+  .sidebar,
+  .tool-page {
+    background-color: rgba(17,30,55,.94);
+  }
+}
+
 </style>
 </head>
 
