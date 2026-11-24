@@ -430,6 +430,744 @@ body {
   .tagline {font-size:8px;letter-spacing:1.8px}
 }
 
+
+/* ===== REFONTE DE L'INTERFACE 2026 ===== */
+:root {
+  --sidebar-width: 265px;
+}
+body {
+  overflow-x: hidden;
+}
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 100;
+  width: var(--sidebar-width);
+  height: 100vh;
+  height: 100dvh;
+  padding: 24px 16px;
+  overflow-y: auto;
+  border-right: 1px solid rgba(34,211,238,.19);
+  border-bottom: 0;
+  background: linear-gradient(165deg,rgba(9,19,42,.98),rgba(14,25,51,.98) 55%,rgba(10,32,48,.98));
+  transition: transform .28s ease;
+}
+.brand-row {
+  padding: 5px 5px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 19px;
+  padding: 0 0 15px;
+  overflow: visible;
+}
+.menu button {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 14px;
+  text-align: left;
+  border-radius: 13px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: .1px;
+}
+.menu button.active {
+  color: #67e8f9;
+  border-color: rgba(34,211,238,.34);
+  background: linear-gradient(100deg,rgba(34,211,238,.17),rgba(139,92,246,.13));
+  box-shadow: inset 3px 0 #22d3ee,0 5px 18px rgba(0,0,0,.12);
+}
+.main {
+  max-width: 1450px;
+  margin-left: var(--sidebar-width);
+  padding: 28px clamp(18px,3vw,42px) 55px;
+}
+.top {
+  min-height: 54px;
+  margin-bottom: 8px;
+}
+.top-heading {
+  flex: 1;
+}
+.nav-toggle {
+  display: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 10px 13px;
+  font-size: 20px;
+}
+.nav-overlay {
+  display: none;
+}
+.hero {
+  display: flex;
+  align-items: center;
+  min-height: 235px;
+  margin-top: 24px;
+  padding: 32px;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+}
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 1.1px;
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 12px #34d399;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.hero-orbit {
+  position: absolute;
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 145px;
+  height: 145px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(103,232,249,.24);
+  border-radius: 50%;
+  color: rgba(103,232,249,.75);
+  font-size: 60px;
+  box-shadow: 0 0 0 18px rgba(103,232,249,.035),0 0 0 38px rgba(167,139,250,.025),0 0 50px rgba(34,211,238,.10);
+}
+.dashboard-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 27px 0 13px;
+}
+.dashboard-heading h3 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+.dashboard-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.dashboard-tag,.stat-indicator {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.dashboard-tag {
+  padding: 6px 9px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.stats {
+  margin-top: 0;
+  gap: 13px;
+}
+.stat {
+  min-height: 135px;
+  padding: 18px;
+  border-radius: 18px;
+}
+.stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.stat .label {
+  margin-top: 12px;
+}
+.stat .number {
+  margin-top: 5px;
+}
+.quick-heading {
+  margin-top: 30px;
+}
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 12px;
+}
+.quick-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  min-height: 83px;
+  padding: 15px;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: transform .2s ease,border-color .2s ease;
+}
+.quick-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+.quick-card > span:nth-child(2) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+}
+.quick-card b {
+  font-size: 12px;
+}
+.quick-card small {
+  color: var(--muted);
+  font-size: 10px;
+}
+.quick-icon {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 39px;
+  border-radius: 12px;
+  color: #67e8f9;
+  background: rgba(34,211,238,.12);
+  font-size: 19px;
+}
+.purple-icon {color:#c4b5fd;background:rgba(167,139,250,.13)}
+.green-icon {color:#6ee7b7;background:rgba(52,211,153,.13)}
+.orange-icon {color:#fdba74;background:rgba(251,146,60,.13)}
+.quick-arrow {
+  color: var(--muted);
+  font-size: 23px;
+}
+.text-action {
+  padding: 7px 9px;
+  border: 0;
+  color: var(--accent);
+  background: transparent;
+  font-size: 12px;
+}
+.activity .list-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  line-height: 1.6;
+}
+.activity-dot {
+  color: var(--accent);
+  font-size: 9px;
+}
+.empty-activity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 8px;
+  text-align: center;
+}
+.empty-activity > span {
+  color: var(--accent);
+  font-size: 25px;
+}
+.empty-activity b {
+  color: var(--text);
+  font-size: 13px;
+}
+.empty-activity small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.dashboard-note {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+body.light .sidebar {
+  background: linear-gradient(165deg,#f8fbff,#e8f0fb);
+  border-right-color: var(--border);
+}
+body.light .menu button.active {
+  color: #087fae;
+}
+@media(max-width:900px) {
+  :root {--sidebar-width:245px}
+  .main {padding:24px 20px 45px}
+  .hero-orbit {right:5%;opacity:.55}
+}
+@media(max-width:700px) {
+  .sidebar {
+    width: min(290px,84vw);
+    transform: translateX(-105%);
+    box-shadow: 20px 0 55px rgba(0,0,0,.35);
+  }
+  body.nav-open .sidebar {
+    transform: translateX(0);
+  }
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: rgba(2,7,18,.62);
+    backdrop-filter: blur(3px);
+  }
+  body.nav-open .nav-overlay {
+    display: block;
+  }
+  .main {
+    margin-left: 0;
+    padding: 18px 15px 38px;
+  }
+  .top {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+  .nav-toggle {
+    display: block;
+    flex: 0 0 auto;
+  }
+  .top-heading h1 {
+    font-size: 21px;
+  }
+  .top-heading .subtitle {
+    font-size: 11px;
+  }
+  .theme {
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+  .hero {
+    min-height: 0;
+    padding: 23px 19px;
+  }
+  .hero-orbit {
+    right: -45px;
+    opacity: .23;
+  }
+  .hero h2 {
+    font-size: 22px;
+  }
+  .hero p {
+    font-size: 12px;
+  }
+  .hero-actions .primary,.hero-actions .secondary {
+    padding: 12px 13px;
+    font-size: 11px;
+  }
+  .stats {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 10px;
+  }
+  .stat {
+    min-height: 119px;
+    padding: 14px;
+  }
+  .stat .number {
+    font-size: 23px;
+  }
+  .quick-grid {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+  .quick-card {
+    min-height: 72px;
+  }
+}
+@media(max-width:380px) {
+  .main {padding-left:11px;padding-right:11px}
+  .top {gap:8px}
+  .top-heading h1 {font-size:18px}
+  .theme {padding:8px;font-size:10px}
+  .hero-actions {flex-direction:column;align-items:stretch}
+}
+
+
+/* ===== REFONTE DES ONGLETS 2026 ===== */
+
+#page {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+}
+
+.tool-page {
+  position: relative;
+  overflow: hidden;
+  padding: 28px !important;
+  border: 1px solid rgba(130,160,220,.17);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(20,31,55,.92), rgba(10,17,33,.96));
+  box-shadow: 0 18px 45px rgba(0,0,0,.16);
+}
+
+.tool-page::before {
+  content: "";
+  display: block;
+  width: 55px;
+  height: 4px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #42d6ff, #7774ff);
+}
+
+.tool-page h3,
+.content-card h3 {
+  margin: 0 0 12px;
+  font-size: clamp(20px, 3vw, 25px);
+  font-weight: 750;
+  letter-spacing: -.5px;
+}
+
+.tool-page p,
+.content-card p {
+  max-width: 850px;
+  color: var(--muted, #aab6ce);
+  line-height: 1.75;
+  margin: 0 0 22px;
+}
+
+.tool-page .field {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  margin: 18px 0;
+  padding: 13px 16px;
+  border: 1px solid rgba(140,165,210,.25);
+  border-radius: 13px;
+  background: rgba(5,12,27,.62);
+  color: #f4f7ff;
+  font: inherit;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.tool-page .field:focus {
+  border-color: #45c9ff;
+  box-shadow: 0 0 0 3px rgba(69,201,255,.12);
+}
+
+.tool-page input[type="file"] {
+  cursor: pointer;
+  padding: 15px;
+}
+
+.tool-page input[type="file"]::file-selector-button {
+  margin-right: 14px;
+  padding: 10px 15px;
+  border: 0;
+  border-radius: 9px;
+  background: rgba(65,174,255,.18);
+  color: #75d5ff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tool-page button,
+.page-grid button {
+  min-height: 44px;
+  margin: 5px 7px 5px 0;
+  padding: 11px 18px;
+  border-radius: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .18s, filter .18s, box-shadow .18s;
+}
+
+.tool-page button:hover,
+.page-grid button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.12);
+}
+
+.tool-page .primary,
+.page-grid .primary {
+  box-shadow: 0 7px 20px rgba(47,151,255,.16);
+}
+
+.tool-page .result {
+  min-height: 75px;
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid rgba(130,160,220,.16);
+  border-radius: 15px;
+  background: rgba(3,10,23,.48);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.tool-page .list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 5px;
+  border-bottom: 1px solid rgba(140,165,210,.13);
+}
+
+.tool-page .list-item:last-child {
+  border-bottom: 0;
+}
+
+.page-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.page-grid > .glass {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid rgba(130,160,220,.17);
+  border-radius: 19px;
+  background: linear-gradient(145deg, rgba(20,31,55,.9), rgba(10,17,33,.94));
+}
+
+.page-grid > .glass h3 {
+  margin-bottom: 12px;
+}
+
+.page-grid > .glass p {
+  line-height: 1.7;
+}
+
+#page .section {
+  margin-bottom: 20px;
+}
+
+body.light .tool-page,
+body.light .page-grid > .glass {
+  background: linear-gradient(145deg, #ffffff, #f1f5fc);
+  border-color: rgba(60,90,140,.16);
+  box-shadow: 0 14px 35px rgba(30,55,90,.08);
+}
+
+body.light .tool-page .field {
+  background: #f7f9fd;
+  color: #17243a;
+  border-color: #d5deed;
+}
+
+body.light .tool-page .result {
+  background: #f5f8fd;
+  border-color: #dce4f0;
+  color: #17243a;
+}
+
+body.light .tool-page p,
+body.light .page-grid p {
+  color: #53627a;
+}
+
+@media (max-width: 700px) {
+  .tool-page {
+    padding: 20px 16px !important;
+    border-radius: 17px;
+  }
+
+  .page-grid {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .page-grid > .glass {
+    padding: 19px;
+  }
+
+  .tool-page .field {
+    min-height: 49px;
+  }
+
+  .tool-page button {
+    max-width: 100%;
+  }
+
+  .tool-page .list-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+
+/* ===== FINITION DES PAGES SECONDAIRES ===== */
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.section-heading h3 {
+  margin-bottom: 7px !important;
+}
+
+.section-heading p {
+  margin-bottom: 0 !important;
+}
+
+.count-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid rgba(85,190,255,.25);
+  border-radius: 30px;
+  background: rgba(55,155,255,.10);
+  color: #6bd2ff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .5px;
+}
+
+.notice-panel,
+.app-status-card,
+.report-export-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid rgba(115,160,220,.17);
+  border-radius: 15px;
+  background: rgba(65,130,210,.07);
+}
+
+.notice-panel {
+  display: block;
+  border-left: 3px solid #48bfff;
+}
+
+.notice-panel p,
+.app-status-card p,
+.report-export-card p {
+  margin: 7px 0 0 !important;
+}
+
+.status-symbol,
+.setting-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: rgba(65,174,255,.14);
+  color: #65ceff;
+  font-size: 22px;
+}
+
+.field-label {
+  display: block;
+  margin-top: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.item-description {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.item-description small,
+.fine-print {
+  color: var(--muted, #aab6ce);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  padding: 30px 12px;
+  text-align: center;
+}
+
+.empty-state > span {
+  color: #63cfff;
+  font-size: 30px;
+}
+
+.empty-state small {
+  color: var(--muted, #aab6ce);
+}
+
+.settings-grid .setting-card {
+  min-height: 210px;
+}
+
+.setting-card .setting-icon {
+  margin-bottom: 15px;
+}
+
+.setting-card .fine-print {
+  display: block;
+  text-align: center;
+}
+
+body.light .notice-panel,
+body.light .app-status-card,
+body.light .report-export-card {
+  background: #f1f6fd;
+  border-color: #dce6f3;
+}
+
+body.light .count-pill {
+  color: #176c9b;
+  background: #e8f5ff;
+  border-color: #c8e7fa;
+}
+
+body.light .item-description small,
+body.light .fine-print,
+body.light .empty-state small {
+  color: #63728a;
+}
+
+@media (max-width: 700px) {
+  .section-heading {
+    flex-direction: column;
+  }
+
+  .app-status-card,
+  .report-export-card {
+    padding: 14px;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
+
+  .button-row button {
+    width: 100%;
+  }
+}
+
 </style>
 </head>
 
@@ -459,11 +1197,12 @@ body {
     <button data-page="settings">⚙ Paramètres</button>
   </nav>
 </aside>
-
+<div class="nav-overlay" id="navOverlay"></div>
 
 <main class="main">
   <div class="top">
-    <div>
+    <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu">☰</button>
+    <div class="top-heading">
       <h1 id="pageTitle">Tableau de bord</h1>
       <div class="subtitle">Votre centre intelligent de cybersécurité</div>
     </div>
@@ -512,6 +1251,7 @@ function go(name) {
  document.getElementById("pageTitle").textContent = titles[name];
 
  render(name);
+ closeSidebar();
 
  window.scrollTo(0, 0);
 }
@@ -520,6 +1260,16 @@ document.getElementById("menu").addEventListener("click",e=>{
  const button=e.target.closest("button[data-page]");
  if(button) go(button.dataset.page);
 });
+
+function closeSidebar() {
+ document.body.classList.remove("nav-open");
+}
+
+document.getElementById("navToggle").addEventListener("click",()=>{
+ document.body.classList.toggle("nav-open");
+});
+
+document.getElementById("navOverlay").addEventListener("click",closeSidebar);
 
 document.getElementById("themeButton").addEventListener("click",()=>{
  document.body.classList.toggle("light");
@@ -531,32 +1281,100 @@ if(localStorage.getItem("asspro_theme")==="light")
  document.body.classList.add("light");
 
 function dashboard() {
+ const recent = history.slice(0, 5);
  return `
  <section class="glass hero">
-   <div class="status">● SYSTÈME PRÊT</div>
-   <h2>Votre sécurité, notre priorité.</h2>
-   <p>Analysez vos fichiers, vérifiez vos liens et surveillez l'intégrité de vos données depuis un seul espace.</p>
-   <button class="primary" onclick="go('files')">Commencer une analyse →</button>
- </section>
- <section class="stats">
-   <div class="glass stat"><div class="symbol">▤</div><div class="label">Fichiers analysés</div><div class="number">${totalFiles}</div></div>
-   <div class="glass stat"><div class="symbol">◇</div><div class="label">Alertes détectées</div><div class="number">${totalThreats}</div></div>
-   <div class="glass stat"><div class="symbol">⬡</div><div class="label">Éléments en quarantaine</div><div class="number">${quarantine.length}</div></div>
-   <div class="glass stat"><div class="symbol">✓</div><div class="label">État de l'interface</div><div class="number good">Prêt</div></div>
- </section>
- <section class="section">
-   <h3>Activité récente</h3>
-   <div class="glass activity">
-   ${history.length ? history.slice(0,5).map(x=>`<div class="list-item">● ${escapeHTML(x.date)} — ${escapeHTML(x.message)}</div>`).join("") : "● Interface initialisée.<br>● En attente d'analyses."}
+   <div class="hero-content">
+     <div class="status"><span class="status-dot"></span> SYSTÈME PRÊT</div>
+     <h2>Votre sécurité, notre priorité.</h2>
+     <p>Bienvenue dans votre centre de contrôle Security ASS PRO. Gérez vos analyses et surveillez vos indicateurs de sécurité depuis un seul espace.</p>
+     <div class="hero-actions">
+       <button class="primary" onclick="go('quick')">⚡ Analyse rapide</button>
+       <button class="secondary" onclick="go('apk')">▣ Examiner un APK</button>
+     </div>
    </div>
- </section>`;
+   <div class="hero-orbit">✦</div>
+ </section>
+
+ <section class="dashboard-heading">
+   <div>
+     <h3>Vue d'ensemble</h3>
+     <p>Les indicateurs enregistrés sur cet appareil</p>
+   </div>
+   <span class="dashboard-tag">LOCAL</span>
+ </section>
+
+ <section class="stats">
+   <div class="glass stat">
+     <div class="stat-top"><span class="symbol">▤</span><span class="stat-indicator">ACTIVITÉ</span></div>
+     <div class="label">Fichiers analysés</div>
+     <div class="number">${totalFiles}</div>
+   </div>
+   <div class="glass stat">
+     <div class="stat-top"><span class="symbol">◇</span><span class="stat-indicator">ALERTES</span></div>
+     <div class="label">Alertes signalées</div>
+     <div class="number">${totalThreats}</div>
+   </div>
+   <div class="glass stat">
+     <div class="stat-top"><span class="symbol">⬡</span><span class="stat-indicator">LOCAL</span></div>
+     <div class="label">Éléments en quarantaine</div>
+     <div class="number">${quarantine.length}</div>
+   </div>
+   <div class="glass stat">
+     <div class="stat-top"><span class="symbol">✓</span><span class="stat-indicator">INTERFACE</span></div>
+     <div class="label">État de l'application</div>
+     <div class="number good">Prêt</div>
+   </div>
+ </section>
+
+ <section class="dashboard-heading quick-heading">
+   <div>
+     <h3>Accès rapides</h3>
+     <p>Choisissez un module</p>
+   </div>
+ </section>
+
+ <section class="quick-grid">
+   <button class="glass quick-card" onclick="go('files')">
+     <span class="quick-icon">▤</span>
+     <span><b>Scanner les fichiers</b><small>Examiner vos documents</small></span>
+     <span class="quick-arrow">›</span>
+   </button>
+   <button class="glass quick-card" onclick="go('links')">
+     <span class="quick-icon purple-icon">↗</span>
+     <span><b>Vérifier un lien</b><small>Examiner une adresse web</small></span>
+     <span class="quick-arrow">›</span>
+   </button>
+   <button class="glass quick-card" onclick="go('apk')">
+     <span class="quick-icon green-icon">▣</span>
+     <span><b>Analyser un APK</b><small>Examiner sa structure</small></span>
+     <span class="quick-arrow">›</span>
+   </button>
+   <button class="glass quick-card" onclick="go('protection')">
+     <span class="quick-icon orange-icon">⌕</span>
+     <span><b>Contrôle d'intégrité</b><small>Comparer les empreintes</small></span>
+     <span class="quick-arrow">›</span>
+   </button>
+ </section>
+
+ <section class="section">
+   <div class="dashboard-heading">
+     <div><h3>Activité récente</h3><p>Dernières opérations enregistrées</p></div>
+     <button class="text-action" onclick="go('history')">Tout voir ›</button>
+   </div>
+   <div class="glass activity">
+   ${recent.length ? recent.map(x=>`<div class="list-item"><span class="activity-dot">●</span><span>${escapeHTML(x.date)} — ${escapeHTML(x.message)}</span></div>`).join("") : '<div class="empty-activity"><span>◷</span><b>Aucune activité récente</b><small>Vos opérations apparaîtront ici après les premières analyses.</small></div>'}
+   </div>
+ </section>
+ <div class="dashboard-note">ⓘ Les statistiques représentent les opérations enregistrées localement. Elles ne constituent pas une certification de sécurité du téléphone.</div>
+ `;
 }
 
 function render(name) {
  if(name==="dashboard") page.innerHTML=dashboard();
 
  if(name==="quick") page.innerHTML=`
- <section class="glass content-card section">
+ <section class="glass content-card section tool-page">
  <h3>Analyse rapide</h3>
  <p>Sélectionne un fichier pour effectuer rapidement les contrôles locaux disponibles : lecture, taille, empreinte SHA-256 et indices élémentaires.</p>
  <input class="field" type="file" id="fileInput">
@@ -565,7 +1383,7 @@ function render(name) {
  </section>`;
 
  if(name==="full") page.innerHTML=`
- <section class="glass content-card section">
+ <section class="glass content-card section tool-page">
  <h3>Analyse complète des fichiers sélectionnés</h3>
  <p>Sélectionne plusieurs fichiers pour les examiner. Cette analyse porte uniquement sur les fichiers choisis et accessibles ; elle ne scanne pas automatiquement tout le téléphone.</p>
  <input class="field" type="file" id="fileInput" multiple>
@@ -574,7 +1392,7 @@ function render(name) {
  </section>`;
 
  if(name==="custom") page.innerHTML=`
- <section class="glass content-card section">
+ <section class="glass content-card section tool-page">
  <h3>Analyse personnalisée</h3>
  <p>Choisis précisément les fichiers que tu souhaites examiner. Aucun fichier ne sera installé ni envoyé à un serveur.</p>
  <input class="field" type="file" id="fileInput" multiple>
@@ -583,7 +1401,7 @@ function render(name) {
  </section>`;
 
  if(name==="files") page.innerHTML=`
- <section class="glass content-card section">
+ <section class="glass content-card section tool-page">
  <h3>Scanner de fichiers</h3>
  <p>Sélectionne un ou plusieurs fichiers. Leur empreinte SHA-256 sera calculée localement dans ton navigateur.</p>
  <input class="field" type="file" id="fileInput" multiple>
@@ -592,7 +1410,7 @@ function render(name) {
  </section>`;
 
  if(name==="links") page.innerHTML=`
- <section class="glass content-card section">
+ <section class="glass content-card section tool-page">
  <h3>Analyse élémentaire d'un lien</h3>
  <p>Vérification de la syntaxe, du protocole et de quelques caractéristiques suspectes. Ce contrôle ne confirme pas la réputation d'un site.</p>
  <input class="field" id="urlInput" placeholder="https://exemple.com">
@@ -601,7 +1419,7 @@ function render(name) {
  </section>`;
 
  if(name==="apk") page.innerHTML=`
- <section class="glass content-card section">
+ <section class="glass content-card section tool-page">
  <h3>Analyse de fichier APK</h3>
  <p>Sélectionne un APK pour calculer son empreinte SHA-256 et examiner ses informations élémentaires. Aucune installation ne sera effectuée.</p>
  <input class="field" type="file" id="apkInput" accept=".apk,application/vnd.android.package-archive">
@@ -610,67 +1428,137 @@ function render(name) {
  </section>`;
 
  if(name==="apps") page.innerHTML=`
- <section class="glass content-card section">
- <h3>Applications installées</h3>
- <p>L'inventaire Android sera connecté au module natif dans une prochaine étape. Android limite la visibilité des applications accessibles à chaque application.</p>
- <div class="result">Module d'inventaire en préparation. Aucune liste fictive n'est affichée.</div>
+ <section class="glass content-card section tool-page">
+   <div class="section-heading">
+     <div>
+       <h3>Applications installées</h3>
+       <p>Inventaire et contrôle des applications Android.</p>
+     </div>
+     <span class="count-pill">MODULE À CONNECTER</span>
+   </div>
+   <div class="app-status-card">
+     <div class="status-symbol">▦</div>
+     <div>
+       <b>Inventaire Android</b>
+       <p>Le module natif n'est pas encore connecté à cette page.</p>
+     </div>
+   </div>
+   <div class="notice-panel">
+     <b>Pourquoi aucune application n'est affichée ?</b>
+     <p>Android impose des restrictions de visibilité. Un inventaire fiable nécessite une intégration native et les autorisations adaptées.</p>
+   </div>
  </section>`;
 
  if(name==="protection") page.innerHTML=`
- <section class="glass content-card section">
- <h3>Contrôle d'intégrité</h3>
- <p>Sélectionne les mêmes fichiers lors des contrôles successifs. ASS PRO comparera leurs empreintes avec la référence enregistrée sur cet appareil.</p>
- <input class="field" type="file" id="integrityInput" multiple>
- <button class="primary" onclick="checkIntegrity()">Comparer l'intégrité</button>
- <button class="secondary" onclick="resetIntegrity()">Effacer la référence</button>
- <div id="integrityResult" class="result">Aucune vérification effectuée.</div>
+ <section class="glass content-card section tool-page">
+   <div class="section-heading">
+     <div>
+       <h3>Contrôle d'intégrité</h3>
+       <p>Compare les empreintes SHA-256 de tes fichiers avec une référence locale.</p>
+     </div>
+     <span class="count-pill">SHA-256</span>
+   </div>
+   <div class="notice-panel">
+     <b>Comment ça fonctionne ?</b>
+     <p>Au premier contrôle, une référence est enregistrée. Lors des contrôles suivants, une empreinte différente indique que le contenu du fichier a changé.</p>
+   </div>
+   <label class="field-label" for="integrityInput">Sélectionner les fichiers à comparer</label>
+   <input class="field" type="file" id="integrityInput" multiple>
+   <div class="button-row">
+     <button class="primary" onclick="checkIntegrity()">Comparer l'intégrité</button>
+     <button class="secondary" onclick="resetIntegrity()">Effacer la référence</button>
+   </div>
+   <div id="integrityResult" class="result">Aucune vérification effectuée.</div>
+   <p class="fine-print">La référence est conservée dans le stockage local de l'application. Elle ne constitue pas une preuve d'authenticité du fichier.</p>
  </section>`;
 
  if(name==="quarantine") page.innerHTML=`
- <section class="glass content-card section">
- <h3>Quarantaine</h3>
- <p>Cette version conserve uniquement une liste locale des éléments signalés. Elle ne déplace et ne bloque pas réellement les fichiers.</p>
- <div class="result">${quarantine.length ? quarantine.map((x,i)=>`<div class="list-item">${escapeHTML(x)} <button class="secondary" onclick="removeQuarantine(${i})">Retirer</button></div>`).join("") : "Aucun élément enregistré."}</div>
+ <section class="glass content-card section tool-page">
+   <div class="section-heading">
+     <div>
+       <h3>Quarantaine</h3>
+       <p>Consulte les éléments enregistrés comme suspects.</p>
+     </div>
+     <span class="count-pill">${quarantine.length} élément(s)</span>
+   </div>
+   <div class="notice-panel">
+     <b>Information importante</b>
+     <p>Cette version conserve une liste locale. Elle ne déplace pas les fichiers et ne les bloque pas réellement.</p>
+   </div>
+   <div class="result">
+     ${quarantine.length
+       ? quarantine.map((x,i)=>`<div class="list-item"><div class="item-description"><b>${escapeHTML(x)}</b><small>Élément enregistré localement</small></div><button class="secondary" onclick="removeQuarantine(${i})">Retirer</button></div>`).join("")
+       : '<div class="empty-state"><span>⬡</span><b>Aucun élément en quarantaine</b><small>Les éléments enregistrés apparaîtront ici.</small></div>'}
+   </div>
  </section>`;
 
  if(name==="history") page.innerHTML=`
- <section class="glass content-card section">
- <h3>Historique des analyses</h3>
- <p>Événements enregistrés localement sur cet appareil.</p>
- <div class="result">${history.length ? history.map(x=>`<div class="list-item">${escapeHTML(x.date)} — ${escapeHTML(x.message)}</div>`).join("") : "Aucune activité enregistrée."}</div>
+ <section class="glass content-card section tool-page">
+   <div class="section-heading">
+     <div>
+       <h3>Historique des analyses</h3>
+       <p>Retrouve les opérations enregistrées sur cet appareil.</p>
+     </div>
+     <span class="count-pill">${history.length} événement(s)</span>
+   </div>
+   <div class="result">
+     ${history.length
+       ? history.map(x=>`<div class="list-item"><div class="item-description"><b>${escapeHTML(x.message)}</b><small>${escapeHTML(x.date)}</small></div><span class="activity-dot">●</span></div>`).join("")
+       : '<div class="empty-state"><span>◷</span><b>Historique vide</b><small>Les opérations réalisées apparaîtront ici.</small></div>'}
+   </div>
  </section>`;
 
  if(name==="reports") page.innerHTML=`
- <section class="glass content-card section">
- <h3>Rapports d'activité</h3>
- <p>Consulte et exporte l'historique local d'ASS PRO.</p>
- <button class="primary" onclick="exportReport()">Exporter le rapport JSON</button>
- <div class="result">${history.length ? history.map(x=>`<div class="list-item">${escapeHTML(x.date)} — ${escapeHTML(x.message)}</div>`).join("") : "Aucun rapport disponible."}</div>
+ <section class="glass content-card section tool-page">
+   <div class="section-heading">
+     <div>
+       <h3>Rapports d'activité</h3>
+       <p>Consulte et exporte les événements enregistrés localement.</p>
+     </div>
+     <span class="count-pill">${history.length} événement(s)</span>
+   </div>
+   <div class="report-export-card">
+     <div class="status-symbol">▧</div>
+     <div>
+       <b>Rapport Security ASS PRO</b>
+       <p>Format JSON · Historique local</p>
+       <button class="primary" onclick="exportReport()">Exporter le rapport</button>
+     </div>
+   </div>
+   <div class="result">
+     ${history.length
+       ? history.map(x=>`<div class="list-item"><div class="item-description"><b>${escapeHTML(x.message)}</b><small>${escapeHTML(x.date)}</small></div></div>`).join("")
+       : '<div class="empty-state"><span>▧</span><b>Aucun rapport disponible</b><small>Effectue une opération pour créer les premières données.</small></div>'}
+   </div>
  </section>`;
 
  if(name==="settings") page.innerHTML=`
- <section class="page-grid">
- <div class="glass content-card">
- <h3>Apparence</h3>
- <p>Choisis ton thème préféré.</p>
- <button class="primary" onclick="toggleTheme()">Changer de thème</button>
- </div>
- <div class="glass content-card">
- <h3>Données locales</h3>
- <p>Efface l'historique enregistré dans ce navigateur.</p>
- <button class="secondary" onclick="clearHistory()">Effacer l'historique</button>
- </div>
- <div class="glass content-card">
- <h3>Protection</h3>
- <p>Les analyses de fichiers de cette version sont effectuées localement dans le navigateur.</p>
- </div>
- <div class="glass content-card">
- <h3>À propos</h3>
- <img src="security-ass-pro-logo.png" alt="Security ASS PRO — Scan, Détecte, Protège"
-      style="display:block;width:min(100%,260px);margin:8px auto 14px;border-radius:18px">
- <p><strong>Security ASS PRO</strong><br>Version 2.0 · Scan · Détecte · Protège<br>
- Votre centre personnel d'analyse et de contrôle de sécurité numérique.</p>
- </div>
+ <section class="page-grid settings-grid">
+   <div class="glass content-card setting-card">
+     <div class="setting-icon">☼</div>
+     <h3>Apparence</h3>
+     <p>Personnalise l'affichage de Security ASS PRO.</p>
+     <button class="primary" onclick="toggleTheme()">Changer de thème</button>
+   </div>
+   <div class="glass content-card setting-card">
+     <div class="setting-icon">◷</div>
+     <h3>Données locales</h3>
+     <p>Réinitialise l'historique des opérations conservées sur cet appareil.</p>
+     <button class="secondary" onclick="clearHistory()">Effacer l'historique</button>
+   </div>
+   <div class="glass content-card setting-card">
+     <div class="setting-icon">⬡</div>
+     <h3>Protection</h3>
+     <p>Les contrôles actuels sont des analyses locales élémentaires. Ils ne remplacent pas un antivirus et ne garantissent pas l'absence de menace.</p>
+   </div>
+   <div class="glass content-card setting-card">
+     <div class="setting-icon">ⓘ</div>
+     <h3>À propos</h3>
+     <img src="security-ass-pro-logo.png" alt="Logo Security ASS PRO"
+          style="display:block;width:min(100%,220px);margin:12px auto;border-radius:18px">
+     <p><strong>Security ASS PRO</strong><br>Version 2.0<br>SCAN · DÉTECTE · PROTÈGE</p>
+     <small class="fine-print">Centre personnel d'analyse et de contrôle de sécurité numérique.</small>
+   </div>
  </section>`;
 }
 
